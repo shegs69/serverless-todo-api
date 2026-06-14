@@ -11,15 +11,23 @@ graph LR
     Lambda -->|Read/Write| DB[(DynamoDB)]
 ```
 
-## What We Built
-1. **Infrastructure as Code (IaC)**:  wrote a `template.yaml` file defining 5 Lambda functions, API routes, and a DynamoDB table.
-2. **Business Logic**: wrote 5 separate Node.js scripts using the AWS SDK v3 to handle CRUD operations.
-3. **Deployment**: Used the AWS SAM CLI to package the code and deploy it via CloudFormation to the AWS Cloud.
-4. **Testing**: Verified the live endpoint using `curl`.
+## Tools Used
+1. AWS SAM CLI
+2. AWS CloudFormation
+3. AWS Lambda
+4. AWS DynamoDB
+5. AWS API Gateway
+6. AWS SDK v3
+
+## What I Built
+1. **Infrastructure as Code (IaC)**: I wrote a `template.yaml` file defining 5 Lambda functions, API routes, and a DynamoDB table.
+2. **Business Logic**: I wrote 5 separate Node.js scripts using the AWS SDK v3 to handle CRUD operations.
+3. **Deployment**: I used the AWS SAM CLI to package the code and deploy it via CloudFormation to the AWS Cloud.
+4. **Testing**: I verified the live endpoint using `curl`.
 
 ## Important Links & Commands
 
-**Your Live API URL:**
+**Live API URL:**
 `https://w4ud3d59n0.execute-api.us-east-1.amazonaws.com/Prod/todos`
 
 **Test Commands:**
