@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  todo-api
+  A simple serverless CRUD API for a todo list.
+
+# Globals apply to all Serverless functions in the file
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+    Runtime: nodejs20.x
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        # We pass the table name to all functions as an environment variable
+        TABLE_NAME: !Ref TodosTable
+
+Resources:
+  # 1. THE DATABASE (DynamoDB)
+  # SimpleTable is a SAM shortcut that creates a basic DynamoDB table with 'id' as the primary key.
+  # It defaults to PAY_PER_REQUEST, which costs $0 for our use case.
+  TodosTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+
+  # 2. THE LAMBDA FUNCTIONS & API GATEWAY ROUTES
+  CreateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/createTodo.handler
+      Policies:
+        # This pre-built policy gives the Lambda permission to read/write to our specific DynamoDB table
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+      Events:
+        # This automatically creates an API Gateway endpoint!
+        CreateTodoApi:
+          Type: Api
+          Properties:
+            Path: /todos
+            Method: post
+
+  GetTodosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/getTodos.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref TodosTable
+      Events:
+        GetTodosApi:
+          Type: Api
+          Properties:
+            Path: /todos
+            Method: get
+
+  GetTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/getTodo.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref TodosTable
+      Events:
+        GetTodoApi:
+          Type: Api
+          Properties:
+            # We use {id} to capture the specific todo ID from the URL
+            Path: /todos/{id}
+            Method: get
+
+  UpdateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/updateTodo.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+      Events:
+        UpdateTodoApi:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: put
+
+  DeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/deleteTodo.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+      Events:
+        DeleteTodoApi:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: delete

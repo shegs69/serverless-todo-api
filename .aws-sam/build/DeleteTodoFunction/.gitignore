@@ -1,0 +1,6 @@
+.ssh/
+SKILLS.md
+MEMORY.md
+Agent.md
+node_modules/
+.env
