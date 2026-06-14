@@ -27,7 +27,7 @@ graph LR
 
 ## Important Links & Commands
 
-**Your Live API URL:**
+**Live API URL:**
 `https://w4ud3d59n0.execute-api.us-east-1.amazonaws.com/Prod/todos`
 
 **Test Commands:**
